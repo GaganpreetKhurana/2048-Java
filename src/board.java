@@ -1,7 +1,7 @@
+import java.util.Random;
 public class board {
     public int matrix[4][4];
     Random randomObject;
-    int maxRandomNumber;
     board(){
         matrix = new int[4][4];
         maxRandomNumber=2;
@@ -25,7 +25,15 @@ public class board {
         }
     }
     int randomNumber(){
-        int random;
-        return random;
+        if(this.randomObject.nextBoolean()){
+            return 3;
+        }
+        else{
+            return 4;
+        }
+    }
+    int randomPosition(Vector<int> postions){
+        int range=postions.size();
+        return postions[this.randomObject.nextInt(range)];
     }
 }
