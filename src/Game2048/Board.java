@@ -105,7 +105,7 @@ public class Board {
     private void moveSingleRow(int row, int newLocation, int step ){
         int oldLocation = newLocation+step;
         while(oldLocation< 4 && oldLocation>-1){
-            if( matrix[row][oldLocation]==0 || checkLocations(step,oldLocation,newLocation)){
+            if( matrix[row][oldLocation]==0){
                 oldLocation+=step;
                 continue;
             }
@@ -115,8 +115,7 @@ public class Board {
                 // cell value != current value
                 newLocation+=step;
             }
-            System.out.print(oldLocation);
-            System.out.println(newLocation);
+
             if(!checkLocations(step,oldLocation,newLocation)){
                 if(matrix[row][newLocation]==0){
                     removeEmptyCell(row*4+newLocation);
@@ -129,8 +128,11 @@ public class Board {
                     matrix[row][newLocation]=matrix[row][oldLocation];
                 }
                 matrix[row][oldLocation] = 0;
-                emptyCells.add(row*4+newLocation);
+                emptyCells.add(row*4+oldLocation);
                 newLocation+=step;
+            }
+            else{
+                newLocation=oldLocation;
             }
             oldLocation+=step;
 
@@ -161,7 +163,7 @@ public class Board {
     private void moveSingleColumn(int column, int newLocation, int step ){
         int oldLocation = newLocation+step;
         while(oldLocation< 4 && oldLocation>-1){
-            if( matrix[oldLocation][column]==0 || checkLocations(step,oldLocation,newLocation)){
+            if( matrix[oldLocation][column]==0 ){
                 oldLocation+=step;
                 continue;
             }
@@ -183,8 +185,10 @@ public class Board {
                     matrix[newLocation][column]=matrix[oldLocation][column];
                 }
                 matrix[oldLocation][column] = 0;
-                emptyCells.add(newLocation * 4 + column);
+                emptyCells.add(oldLocation * 4 + column);
                 newLocation+=step;
+            }else{
+                newLocation=oldLocation;
             }
             oldLocation+=step;
         }
