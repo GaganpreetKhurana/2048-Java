@@ -51,7 +51,7 @@ public class Board {
     private void rightMoveRow(int row){
         int j=3; // new location
         for(int i=2;i>=0;i--){
-            if(j<=i){
+            if(j<=i || matrix[row][i]==0){
                 continue;
             }
             while(j>i && matrix[row][j]!=0 && matrix[row][j]!=matrix[row][i]){
@@ -68,8 +68,9 @@ public class Board {
                     matrix[row][j] = matrix[row][i];
                 }
                 matrix[row][i] = 0;
+                j--;
             }
-            j--;
+
 
         }
     }
@@ -80,7 +81,7 @@ public class Board {
         }
 
         // generate a new random number
-        int randomNumber=randomNumber();
+        int randomNumber=2;//randomNumber();
 
         // positions for random number
         Vector<Integer> possiblePositions = new Vector<Integer>();
@@ -89,6 +90,7 @@ public class Board {
                 possiblePositions.add(i);
             }
         }
+//        System.out.println(possiblePositions.toString());
         if(possiblePositions.size()>0){
             // insert random number
             int randomPosition= randomPosition(possiblePositions);
@@ -97,8 +99,13 @@ public class Board {
     }
     public static void main(String[] args) {
         Board newBoard= new Board();
-        newBoard.printBoard();
-        newBoard.rightMove();
-        newBoard.printBoard();
+//        newBoard.printBoard();
+
+        int moves=10;
+        while(moves>0){
+            newBoard.rightMove();
+            newBoard.printBoard();
+            moves--;
+        }
     }
 };
