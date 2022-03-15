@@ -1,4 +1,4 @@
-package Game2048;
+// package Game2048;
 
 class Game{
 
