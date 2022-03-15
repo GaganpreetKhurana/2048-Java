@@ -215,12 +215,15 @@ public class Board {
         insertRandomNumber();
     }
 
+    public boolean checkGameFinish(){
+        return emptyCells.size()==0;
+    }
 
     private static void clearConsole(){
         // to clear console
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        
+
         System.out.println("Welcome to 2048!!!!");
         System.out.println("Moves: L(Left) R(Right) U(Up) D(Down)\nPress any other key to end :-(\nPress ENTER key after every move");
 
@@ -240,7 +243,7 @@ public class Board {
         Scanner scan = new Scanner(System.in);
 
 
-        while (true) {
+        while (!newBoard.checkGameFinish()) {
             try {
                 System.out.print("Move: ");
                 String input = scan.nextLine();
@@ -270,12 +273,17 @@ public class Board {
             }
             catch (InputMismatchException e) {
                 clearConsole();
-                System.out.print("Thank You for Playing :-)\n");
+                System.out.print("Invalid Input!!\nThank You for Playing :-)\n");
                 newBoard.printBoard();
                 scan.close();
-                break;
+                System.exit(0);
             }
         }
+        clearConsole();
+        System.out.print("The End!!\nThank You for Playing :-)\n");
+        newBoard.printBoard();
+        scan.close();
+        System.exit(0);
 
     }
 };
