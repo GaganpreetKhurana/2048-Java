@@ -1,11 +1,11 @@
-package Game2048;
+//package Game2048;
 
 import java.util.Random;
 import java.util.Vector;
 
 public class Board {
 
-    private int matrix[4][4]; // Board matrix
+    private int[][] matrix; // Board matrix
     private Random randomObject;  // To generate a random number
 
 
@@ -31,6 +31,7 @@ public class Board {
             System.out.println("");
             System.out.println("---- ---- ---- ----");
         }
+        System.out.println();
     }
     private int randomNumber(){
         // To generate a random number
@@ -41,11 +42,11 @@ public class Board {
             return 4;
         }
     }
-    private int randomPosition(Vector<int> postions){
+    private int randomPosition(Vector<Integer> postions){
 
         // Select a random place for the random number
         int range=postions.size();
-        return postions[this.randomObject.nextInt(range)];
+        return postions.get(this.randomObject.nextInt(range));
     }
     private void rightMoveRow(int row){
         int j=3; // new location
@@ -82,10 +83,10 @@ public class Board {
         int randomNumber=randomNumber();
 
         // positions for random number
-        Vector<int> possiblePositions = new Vector<int>();
+        Vector<Integer> possiblePositions = new Vector<Integer>();
         for(int i=0;i<4;i++){
             if(matrix[i][0]==0){ // empty cells in column 0
-                possiblePositions.append(i);
+                possiblePositions.add(i);
             }
         }
         if(possiblePositions.size()>0){
@@ -93,5 +94,11 @@ public class Board {
             int randomPosition= randomPosition(possiblePositions);
             matrix[randomPosition][0]=randomNumber;
         }
+    }
+    public static void main(String[] args) {
+        Board newBoard= new Board();
+        newBoard.printBoard();
+        newBoard.rightMove();
+        newBoard.printBoard();
     }
 };
