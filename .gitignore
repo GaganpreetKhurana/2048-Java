@@ -24,3 +24,9 @@ hs_err_pid*
 
 # intelliJ
 .idea
+
+# vscode
+.vscode
+
+#  class folder
+.game2048
