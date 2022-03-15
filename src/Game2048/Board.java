@@ -9,15 +9,16 @@ public class Board {
 
     private int[][] matrix; // Board matrix
     private Random randomObject;  // To generate a random number
-    private int score;
+    private int score; // To maintain score
 
     public Board(){
         // Constructor
 
-        randomObject= new Random();
+        randomObject= new Random(); // initialize the random object
 
-        matrix = new int[4][4];
-
+        matrix = new int[4][4]; // matrix initialized
+        
+        // For generating a random Column and Row for initialization
         Vector<Integer> positions = new Vector<Integer>();
         for(int index=0;index<4;index++){
             positions.add(index);
@@ -27,9 +28,12 @@ public class Board {
         matrix[randomRow][randomColumn]=2;
         
         score = 0;
+
+        // print initial board
         printBoard();
 
     }
+    
     public void printBoard(){
         // To print the matrix to console
         System.out.println("---- ---- ---- ----");
@@ -47,10 +51,13 @@ public class Board {
             System.out.println("---- ---- ---- ----");
         }
         System.out.println();
-        System.out.print("Current Score: ");
+
+        // print score
+        System.out.print("Score: ");
         System.out.println(score);
         System.out.println();
     }
+    
     private int randomNumber(){
         // To generate a random number
         if(this.randomObject.nextBoolean()){
@@ -60,6 +67,7 @@ public class Board {
             return 4;
         }
     }
+    
     private int randomPosition(Vector<Integer> positions){
 
         // Select a random place for the random number
@@ -110,9 +118,8 @@ public class Board {
                 possiblePositions.add(i);
             }
         }
-//        System.out.println(possiblePositions.toString());
         if(possiblePositions.size()>0){
-            // insert random number
+            // insert random number in empty cell in first column
             int randomPosition= randomPosition(possiblePositions);
             matrix[randomPosition][0]=randomNumber;
         }
@@ -147,7 +154,7 @@ public class Board {
     }
     public void leftMove(){
         for(int i=0;i<4;i++){
-            // Perform a right move for each row
+            // Perform a left move for each row
             leftMoveRow(i);
         }
 
@@ -161,9 +168,8 @@ public class Board {
                 possiblePositions.add(i);
             }
         }
-//        System.out.println(possiblePositions.toString());
         if(possiblePositions.size()>0){
-            // insert random number
+            // insert random number in empty cell in last column
             int randomPosition= randomPosition(possiblePositions);
             matrix[randomPosition][3]=randomNumber;
         }
@@ -198,7 +204,7 @@ public class Board {
     }
     public void upMove(){
         for(int i=0;i<4;i++){
-            // Perform a right move for each row
+            // Perform a up move for each column
             upMoveColumn(i);
         }
 
@@ -212,9 +218,8 @@ public class Board {
                 possiblePositions.add(i);
             }
         }
-//        System.out.println(possiblePositions.toString());
         if(possiblePositions.size()>0){
-            // insert random number
+            // insert random number in empty cell in last row
             int randomPosition= randomPosition(possiblePositions);
             matrix[3][randomPosition]=randomNumber;
         }
@@ -249,7 +254,7 @@ public class Board {
     }
     public void downMove(){
         for(int i=0;i<4;i++){
-            // Perform a right move for each row
+            // Perform a down move for each column
             downMoveColumn(i);
         }
 
@@ -263,28 +268,36 @@ public class Board {
                 possiblePositions.add(i);
             }
         }
-//        System.out.println(possiblePositions.toString());
         if(possiblePositions.size()>0){
-            // insert random number
+            // insert random number at an empty place in first row
             int randomPosition= randomPosition(possiblePositions);
             matrix[0][randomPosition]=randomNumber;
         }
     }
 
-    
-    public static void main(String[] args) {
+    private void clearConsole(){
+        // to clear console
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        Board newBoard= new Board();
-//        newBoard.printBoard();
+    }
 
+    public static void main(String[] args) {
+
+        // new Board Object
+        Board newBoard= new Board();
+        newBoard.clearConsole();
+
+        // Scanner object for input
         Scanner scan = new Scanner(System.in);
+
+
         while (true) {
             try {
-                // System.out.print("\033[H\033[2J");
-                // System.out.flush();
-                String input = scan.nextLine();
                 
+                String input = scan.nextLine();
+                newBoard.clearConsole();
+
+                // call appropriate function according to input
                 switch (input){
                     case "L":
                         newBoard.leftMove();
@@ -299,14 +312,14 @@ public class Board {
                         newBoard.downMove();
                         break;
                     default:
+                        // exit
                         newBoard.printBoard();
                         throw new InputMismatchException();
                 }
                 newBoard.printBoard();
             }
             catch (InputMismatchException e) {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
+                newBoard.clearConsole();
                 System.out.print("Thank You for Playing :-)\n");
                 newBoard.printBoard();
                 scan.close();
