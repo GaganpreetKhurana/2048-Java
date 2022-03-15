@@ -9,7 +9,7 @@ public class Board {
     private int[][] matrix; // Board matrix
     private Random randomObject;  // To generate a random number
     private int score; // To maintain score
-    private LinkedList<int[]> emptyCells; 
+    private LinkedList<Integer> emptyCells; 
 
     public Board(){
         // Constructor
@@ -21,13 +21,10 @@ public class Board {
         
         
         // add empty cells
-        emptyCells = new LinkedList<int[]>();
-        int [] pair = new int[2];
+        emptyCells = new LinkedList<Integer>();
         for (int i=0;i<4;i++){
-            pair[0]=i;
             for(int j=0;j<4;j++){
-                pair[1]=j;
-                emptyCells.addLast(pair);
+                emptyCells.addLast(i*4+j);
             }
         }
 
@@ -79,170 +76,148 @@ public class Board {
 
         // Select a random place for the random number
         int range=emptyCells.size();
-        int randomPairPosition =this.randomObject.nextInt(range);
-        matrix[emptyCells.get(randomPairPosition)[0]][emptyCells.get(randomPairPosition)[1]]=range==16?2:randomNumber();
+        int randomPairPosition=this.randomObject.nextInt(range);
+
+        matrix[emptyCells.get(randomPairPosition)/4][emptyCells.get(randomPairPosition)%4]=(range==16?2:randomNumber());
         emptyCells.remove(randomPairPosition);
     }
     
-    private void rightMoveRow(int row){
-        int j=3; // new location
-        for(int i=2;i>=0;i--){
-            if(j<=i || matrix[row][i]==0){
+    private boolean checkLocations(int step,int oldLocation,int newLocation){
+        if(step==-1){
+            return oldLocation>=newLocation;
+        }
+        return newLocation>=oldLocation;
+    }
+
+    private void removeEmptyCell(int cell){
+        for (int index=0;index<emptyCells.size();index++){
+            if(emptyCells.get(index)==cell){
+                emptyCells.remove(index);
+                break;
+            }
+        }
+    }
+    
+    private void moveSingleRow(int row, int newLocation, int step ){
+        int oldLocation = newLocation+step;
+        while(oldLocation< 4 && oldLocation<-1){
+            if( matrix[row][oldLocation]==0 || checkLocations(step,oldLocation,newLocation)){
+                oldLocation+=step;
                 continue;
             }
-            while(j>i && matrix[row][j]!=0 && matrix[row][j]!=matrix[row][i]){
+            while(!checkLocations(step,oldLocation,newLocation) && matrix[row][newLocation]!=matrix[row][oldLocation]){
                 // to find next location
                 // cell should be empty
                 // cell value != current value
-                j--;
+                newLocation+=step;
             }
-            if (j>i) {
-                if (matrix[row][j] == matrix[row][i]) {
-                    // new cell and current cell values are same
-                    matrix[row][j] *= 2;
-                    score+= matrix[row][j];
-                } else {
-                    matrix[row][j] = matrix[row][i];
+            if(!checkLocations(step,oldLocation,newLocation)){
+                if(matrix[row][newLocation]==0){
+                    removeEmptyCell(row*4+newLocation);
                 }
-                matrix[row][i] = 0;
-                j--;
+                if (matrix[row][newLocation] == matrix[row][oldLocation]) {
+                    // new cell and current cell values are same
+                    matrix[row][newLocation] *= 2;
+                    score+= matrix[row][newLocation];
+                } else {
+                    matrix[row][newLocation]=matrix[row][oldLocation];
+                }
+                matrix[row][oldLocation] = 0;
+                emptyCells.add(row*4+newLocation);
+                newLocation+=step;
             }
-
 
         }
     }
+    
     public void rightMove(){
         for(int i=0;i<4;i++){
             // Perform a right move for each row
-            rightMoveRow(i);
+            moveSingleRow(i,3,-1);
         }
 
         // insert random number at an empty cell;
         insertRandomNumber();
     }
 
-    private void leftMoveRow(int row){
-        int j=0; // new location
-        for(int i=1;i<4;i++){
-            if(j>=i || matrix[row][i]==0){
-                continue;
-            }
-            while(j<i && matrix[row][j]!=0 && matrix[row][j]!=matrix[row][i]){
-                // to find next location
-                // cell should be empty
-                // cell value != current value
-                j++;
-            }
-            if (j<i) {
-                if (matrix[row][j] == matrix[row][i]) {
-                    // new cell and current cell values are same
-                    matrix[row][j] *= 2;
-                    score+= matrix[row][j];
-                } else {
-                    matrix[row][j] = matrix[row][i];
-                }
-                matrix[row][i] = 0;
-                j++;
-            }
-
-
-        }
-    }
     public void leftMove(){
         for(int i=0;i<4;i++){
             // Perform a left move for each row
-            leftMoveRow(i);
+            moveSingleRow(i,0,1);
         }
 
         // insert random number at an empty cell;
         insertRandomNumber();
     }
     
-    private void upMoveColumn(int column){
-        int j=0; // new location
-        for(int i=1;i<4;i++){
-            if(j>=i || matrix[i][column]==0){
+
+    private void moveSingleColumn(int column, int newLocation, int step ){
+        int oldLocation = newLocation+step;
+        while(oldLocation< 4 && oldLocation<-1){
+            if( matrix[oldLocation][column]==0 || checkLocations(step,oldLocation,newLocation)){
+                oldLocation+=step;
                 continue;
             }
-            while(j<i && matrix[j][column]!=0 && matrix[j][column]!=matrix[i][column]){
+            while(!checkLocations(step,oldLocation,newLocation) && matrix[newLocation][column]!=matrix[oldLocation][column]){
                 // to find next location
                 // cell should be empty
                 // cell value != current value
-                j++;
+                newLocation+=step;
             }
-            if (j<i) {
-                if (matrix[j][column] == matrix[i][column]) {
-                    // new cell and current cell values are same
-                    matrix[j][column] *= 2;
-                    score+= matrix[j][column];
-                } else {
-                    matrix[j][column] = matrix[i][column];
+            if(!checkLocations(step,oldLocation,newLocation)){
+                if(matrix[newLocation][column]==0){
+                    removeEmptyCell(newLocation*4+column);
                 }
-                matrix[i][column] = 0;
-                j++;
+                if (matrix[newLocation][column] == matrix[oldLocation][column]) {
+                    // new cell and current cell values are same
+                    matrix[newLocation][column] *= 2;
+                    score+= matrix[newLocation][column];
+                } else {
+                    matrix[newLocation][column]=matrix[oldLocation][column];
+                }
+                matrix[oldLocation][column] = 0;
+                emptyCells.add(newLocation * 4 + column);
+                newLocation+=step;
             }
-
 
         }
     }
+    
     public void upMove(){
         for(int i=0;i<4;i++){
             // Perform a up move for each column
-            upMoveColumn(i);
+            moveSingleColumn(i,0,1);
         }
 
         // insert random number at an empty cell;
         insertRandomNumber();
     }
     
-    private void downMoveColumn(int column){
-        int j=3; // new location
-        for(int i=2;i>=0;i--){
-            if(j<=i || matrix[i][column]==0){
-                continue;
-            }
-            while(j>i && matrix[j][column]!=0 && matrix[j][column]!=matrix[i][column]){
-                // to find next location
-                // cell should be empty
-                // cell value != current value
-                j--;
-            }
-            if (j>i) {
-                if (matrix[j][column] == matrix[i][column]) {
-                    // new cell and current cell values are same
-                    matrix[j][column] *= 2;
-                    score+= matrix[j][column];
-                } else {
-                    matrix[j][column] = matrix[i][column];
-                }
-                matrix[i][column] = 0;
-                j--;
-            }
-
-
-        }
-    }
     public void downMove(){
         for(int i=0;i<4;i++){
             // Perform a down move for each column
-            downMoveColumn(i);
+            moveSingleColumn(i,3,-1);
         }
-
         // insert random number at an empty cell;
         insertRandomNumber();
     }
 
-    private void clearConsole(){
+    private static void clearConsole(){
         // to clear console
         System.out.print("\033[H\033[2J");
         System.out.flush();
+        System.out.println("Welcome to 2048!!!!");
+        System.out.println("Moves: L(Left) R(Right) U(Up) D(Down)\nPress any other key to end :-(\nPress ENTER key after every move");
+
     }
 
     public static void main(String[] args) {
 
+        clearConsole();
+
         // new Board Object
         Board newBoard= new Board();
-        newBoard.clearConsole();
+        
 
         // Scanner object for input
         Scanner scan = new Scanner(System.in);
@@ -252,7 +227,6 @@ public class Board {
             try {
                 
                 String input = scan.nextLine();
-                newBoard.clearConsole();
 
                 // call appropriate function according to input
                 switch (input){
@@ -273,10 +247,12 @@ public class Board {
                         newBoard.printBoard();
                         throw new InputMismatchException();
                 }
+
+                clearConsole();
                 newBoard.printBoard();
             }
             catch (InputMismatchException e) {
-                newBoard.clearConsole();
+                clearConsole();
                 System.out.print("Thank You for Playing :-)\n");
                 newBoard.printBoard();
                 scan.close();
