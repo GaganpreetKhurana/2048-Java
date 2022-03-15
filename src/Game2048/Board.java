@@ -9,13 +9,24 @@ public class Board {
 
     private int[][] matrix; // Board matrix
     private Random randomObject;  // To generate a random number
-
+    private int score;
 
     public Board(){
         // Constructor
-        matrix = new int[4][4];
-        matrix[0][0]=2;
+
         randomObject= new Random();
+
+        matrix = new int[4][4];
+
+        Vector<Integer> positions = new Vector<Integer>();
+        for(int index=0;index<4;index++){
+            positions.add(index);
+        }
+        int randomRow = randomPosition(positions);
+        int randomColumn = randomPosition(positions);
+        matrix[randomRow][randomColumn]=2;
+        
+        score = 0;
         printBoard();
 
     }
@@ -35,6 +46,9 @@ public class Board {
             System.out.println("");
             System.out.println("---- ---- ---- ----");
         }
+        System.out.println();
+        System.out.print("Current Score: ");
+        System.out.println(score);
         System.out.println();
     }
     private int randomNumber(){
@@ -69,6 +83,7 @@ public class Board {
                 if (matrix[row][j] == matrix[row][i]) {
                     // new cell and current cell values are same
                     matrix[row][j] *= 2;
+                    score+= matrix[row][j];
                 } else {
                     matrix[row][j] = matrix[row][i];
                 }
@@ -119,6 +134,7 @@ public class Board {
                 if (matrix[row][j] == matrix[row][i]) {
                     // new cell and current cell values are same
                     matrix[row][j] *= 2;
+                    score+= matrix[row][j];
                 } else {
                     matrix[row][j] = matrix[row][i];
                 }
@@ -169,6 +185,7 @@ public class Board {
                 if (matrix[j][column] == matrix[i][column]) {
                     // new cell and current cell values are same
                     matrix[j][column] *= 2;
+                    score+= matrix[j][column];
                 } else {
                     matrix[j][column] = matrix[i][column];
                 }
@@ -219,6 +236,7 @@ public class Board {
                 if (matrix[j][column] == matrix[i][column]) {
                     // new cell and current cell values are same
                     matrix[j][column] *= 2;
+                    score+= matrix[j][column];
                 } else {
                     matrix[j][column] = matrix[i][column];
                 }
@@ -289,7 +307,7 @@ public class Board {
             catch (InputMismatchException e) {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
-                System.out.print("Bye\n");
+                System.out.print("Thank You for Playing :-)\n");
                 newBoard.printBoard();
                 scan.close();
                 break;
