@@ -1,4 +1,4 @@
-package Game2048;
+package game2048;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -18,7 +18,7 @@ class Game{
     
     public static void main(String[] args) {
 
-        // clearConsole();
+        clearConsole();
 
         // new Board Object
         Board newBoard= new Board();

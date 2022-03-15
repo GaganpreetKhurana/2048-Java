@@ -27,3 +27,6 @@ hs_err_pid*
 
 # vscode
 .vscode
+
+#  class folder
+.game2048

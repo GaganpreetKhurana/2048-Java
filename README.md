@@ -2,10 +2,16 @@
 
 2048 game - CLI based - Java
 
+![Screenshot of the Game](Screenshots/2048.png "Screenshot of the game")
+
 ## How to Run
 
 1. Make sure you have **Java** installed in your system
-1. Run the command `javac src\Game\Game2048\Game.java && java src\Game\Game2048\Game` in the command prompt
+2. Open **Command Prompt** in the root folder and run the command `cd src` to go the *src* folder.
+3. To compile the code run the following commands in order:-
+   1. `javac -d . Board.java`
+   2. `javac -d . Game.java`
+4. Run the command `java game2048.Game` to start playing
 
 ## How to Play
 
