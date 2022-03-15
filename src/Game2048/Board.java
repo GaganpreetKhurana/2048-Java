@@ -151,6 +151,58 @@ public class Board {
             matrix[randomPosition][3]=randomNumber;
         }
     }
+    
+    private void upMoveColumn(int column){
+        int j=0; // new location
+        for(int i=1;i<4;i++){
+            if(j>=i || matrix[i][column]==0){
+                continue;
+            }
+            while(j<i && matrix[j][column]!=0 && matrix[j][column]!=matrix[i][column]){
+                // to find next location
+                // cell should be empty
+                // cell value != current value
+                j++;
+            }
+            if (j<i) {
+                if (matrix[j][column] == matrix[i][column]) {
+                    // new cell and current cell values are same
+                    matrix[j][column] *= 2;
+                } else {
+                    matrix[j][column] = matrix[i][column];
+                }
+                matrix[i][column] = 0;
+                j++;
+            }
+
+
+        }
+    }
+    public void upMove(){
+        for(int i=0;i<4;i++){
+            // Perform a right move for each row
+            upMoveColumn(i);
+        }
+
+        // generate a new random number
+        int randomNumber=randomNumber();
+
+        // positions for random number
+        Vector<Integer> possiblePositions = new Vector<Integer>();
+        for(int i=0;i<4;i++){
+            if(matrix[3][i]==0){ // empty cells in column 0
+                possiblePositions.add(i);
+            }
+        }
+//        System.out.println(possiblePositions.toString());
+        if(possiblePositions.size()>0){
+            // insert random number
+            int randomPosition= randomPosition(possiblePositions);
+            matrix[3][randomPosition]=randomNumber;
+        }
+    }
+    
+    
     public static void main(String[] args) {
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -160,13 +212,19 @@ public class Board {
         Scanner scan = new Scanner(System.in);
         while (true) {
             try {
+                // System.out.print("\033[H\033[2J");
+                // System.out.flush();
                 String input = scan.nextLine();
+                
                 switch (input){
                     case "L":
                         newBoard.LeftMove();
                         break;
                     case "R":
                         newBoard.rightMove();
+                        break;
+                    case "U":
+                        newBoard.upMove();
                         break;
                     default:
                         newBoard.printBoard();
