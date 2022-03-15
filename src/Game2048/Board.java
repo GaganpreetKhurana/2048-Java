@@ -9,7 +9,7 @@ public class Board {
     private int[][] matrix; // Board matrix
     private Random randomObject;  // To generate a random number
     private int score; // To maintain score
-    private LinkedList<Integer> emptyCells; 
+    private LinkedList<Integer> emptyCells; // List of empty cells
 
     public Board(){
         // Constructor
@@ -38,6 +38,7 @@ public class Board {
 
     }
     
+    
     public void printBoard(){
         // To print the matrix to console
         System.out.println("---- ---- ---- ----");
@@ -62,6 +63,7 @@ public class Board {
         System.out.println();
     }
     
+    
     private int randomNumber(){
         // To generate a random number
         if(this.randomObject.nextBoolean()){
@@ -82,6 +84,7 @@ public class Board {
         emptyCells.remove(randomPairPosition);
     }
     
+    
     private boolean checkLocations(int step,int oldLocation,int newLocation){
         if(step==-1){
             return oldLocation>=newLocation;
@@ -98,19 +101,22 @@ public class Board {
         }
     }
     
+    
     private void moveSingleRow(int row, int newLocation, int step ){
         int oldLocation = newLocation+step;
-        while(oldLocation< 4 && oldLocation<-1){
+        while(oldLocation< 4 && oldLocation>-1){
             if( matrix[row][oldLocation]==0 || checkLocations(step,oldLocation,newLocation)){
                 oldLocation+=step;
                 continue;
             }
-            while(!checkLocations(step,oldLocation,newLocation) && matrix[row][newLocation]!=matrix[row][oldLocation]){
+            while(!checkLocations(step,oldLocation,newLocation) && matrix[row][newLocation]!=0 && matrix[row][newLocation]!=matrix[row][oldLocation]){
                 // to find next location
                 // cell should be empty
                 // cell value != current value
                 newLocation+=step;
             }
+            System.out.print(oldLocation);
+            System.out.println(newLocation);
             if(!checkLocations(step,oldLocation,newLocation)){
                 if(matrix[row][newLocation]==0){
                     removeEmptyCell(row*4+newLocation);
@@ -126,6 +132,7 @@ public class Board {
                 emptyCells.add(row*4+newLocation);
                 newLocation+=step;
             }
+            oldLocation+=step;
 
         }
     }
@@ -153,12 +160,12 @@ public class Board {
 
     private void moveSingleColumn(int column, int newLocation, int step ){
         int oldLocation = newLocation+step;
-        while(oldLocation< 4 && oldLocation<-1){
+        while(oldLocation< 4 && oldLocation>-1){
             if( matrix[oldLocation][column]==0 || checkLocations(step,oldLocation,newLocation)){
                 oldLocation+=step;
                 continue;
             }
-            while(!checkLocations(step,oldLocation,newLocation) && matrix[newLocation][column]!=matrix[oldLocation][column]){
+            while(!checkLocations(step,oldLocation,newLocation) && matrix[newLocation][column]!=0 && matrix[newLocation][column]!=matrix[oldLocation][column]){
                 // to find next location
                 // cell should be empty
                 // cell value != current value
@@ -179,7 +186,7 @@ public class Board {
                 emptyCells.add(newLocation * 4 + column);
                 newLocation+=step;
             }
-
+            oldLocation+=step;
         }
     }
     
@@ -202,14 +209,17 @@ public class Board {
         insertRandomNumber();
     }
 
+
     private static void clearConsole(){
         // to clear console
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        // System.out.print("\033[H\033[2J");
+        // System.out.flush();
         System.out.println("Welcome to 2048!!!!");
         System.out.println("Moves: L(Left) R(Right) U(Up) D(Down)\nPress any other key to end :-(\nPress ENTER key after every move");
 
     }
+
+
 
     public static void main(String[] args) {
 
