@@ -1,15 +1,15 @@
 //package Game2048;
 
+import java.util.LinkedList;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Vector;
-
 public class Board {
 
     private int[][] matrix; // Board matrix
     private Random randomObject;  // To generate a random number
     private int score; // To maintain score
+    private LinkedList<int[]> emptyCells; 
 
     public Board(){
         // Constructor
@@ -18,15 +18,22 @@ public class Board {
 
         matrix = new int[4][4]; // matrix initialized
         
-        // For generating a random Column and Row for initialization
-        Vector<Integer> positions = new Vector<Integer>();
-        for(int index=0;index<4;index++){
-            positions.add(index);
-        }
-        int randomRow = randomPosition(positions);
-        int randomColumn = randomPosition(positions);
-        matrix[randomRow][randomColumn]=2;
         
+        
+        // add empty cells
+        emptyCells = new LinkedList<int[]>();
+        int [] pair = new int[2];
+        for (int i=0;i<4;i++){
+            pair[0]=i;
+            for(int j=0;j<4;j++){
+                pair[1]=j;
+                emptyCells.addLast(pair);
+            }
+        }
+
+        // insert random number at an empty cell;
+        insertRandomNumber();
+
         score = 0;
 
         // print initial board
@@ -68,11 +75,13 @@ public class Board {
         }
     }
     
-    private int randomPosition(Vector<Integer> positions){
+    private void insertRandomNumber(){
 
         // Select a random place for the random number
-        int range=positions.size();
-        return positions.get(this.randomObject.nextInt(range));
+        int range=emptyCells.size();
+        int randomPairPosition =this.randomObject.nextInt(range);
+        matrix[emptyCells.get(randomPairPosition)[0]][emptyCells.get(randomPairPosition)[1]]=range==16?2:randomNumber();
+        emptyCells.remove(randomPairPosition);
     }
     
     private void rightMoveRow(int row){
@@ -108,21 +117,8 @@ public class Board {
             rightMoveRow(i);
         }
 
-        // generate a new random number
-        int randomNumber=randomNumber();
-
-        // positions for random number
-        Vector<Integer> possiblePositions = new Vector<Integer>();
-        for(int i=0;i<4;i++){
-            if(matrix[i][0]==0){ // empty cells in column 0
-                possiblePositions.add(i);
-            }
-        }
-        if(possiblePositions.size()>0){
-            // insert random number in empty cell in first column
-            int randomPosition= randomPosition(possiblePositions);
-            matrix[randomPosition][0]=randomNumber;
-        }
+        // insert random number at an empty cell;
+        insertRandomNumber();
     }
 
     private void leftMoveRow(int row){
@@ -158,21 +154,8 @@ public class Board {
             leftMoveRow(i);
         }
 
-        // generate a new random number
-        int randomNumber=randomNumber();
-
-        // positions for random number
-        Vector<Integer> possiblePositions = new Vector<Integer>();
-        for(int i=0;i<4;i++){
-            if(matrix[i][3]==0){ // empty cells in column 0
-                possiblePositions.add(i);
-            }
-        }
-        if(possiblePositions.size()>0){
-            // insert random number in empty cell in last column
-            int randomPosition= randomPosition(possiblePositions);
-            matrix[randomPosition][3]=randomNumber;
-        }
+        // insert random number at an empty cell;
+        insertRandomNumber();
     }
     
     private void upMoveColumn(int column){
@@ -208,21 +191,8 @@ public class Board {
             upMoveColumn(i);
         }
 
-        // generate a new random number
-        int randomNumber=randomNumber();
-
-        // positions for random number
-        Vector<Integer> possiblePositions = new Vector<Integer>();
-        for(int i=0;i<4;i++){
-            if(matrix[3][i]==0){ // empty cells in column 0
-                possiblePositions.add(i);
-            }
-        }
-        if(possiblePositions.size()>0){
-            // insert random number in empty cell in last row
-            int randomPosition= randomPosition(possiblePositions);
-            matrix[3][randomPosition]=randomNumber;
-        }
+        // insert random number at an empty cell;
+        insertRandomNumber();
     }
     
     private void downMoveColumn(int column){
@@ -258,21 +228,8 @@ public class Board {
             downMoveColumn(i);
         }
 
-        // generate a new random number
-        int randomNumber=randomNumber();
-
-        // positions for random number
-        Vector<Integer> possiblePositions = new Vector<Integer>();
-        for(int i=0;i<4;i++){
-            if(matrix[0][i]==0){ // empty cells in column 0
-                possiblePositions.add(i);
-            }
-        }
-        if(possiblePositions.size()>0){
-            // insert random number at an empty place in first row
-            int randomPosition= randomPosition(possiblePositions);
-            matrix[0][randomPosition]=randomNumber;
-        }
+        // insert random number at an empty cell;
+        insertRandomNumber();
     }
 
     private void clearConsole(){
