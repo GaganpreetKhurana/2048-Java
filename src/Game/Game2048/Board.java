@@ -8,7 +8,7 @@ public class Board {
     private int[][] matrix; // Board matrix
     private Random randomObject;  // To generate a random number
     private int score; // To maintain score
-    private LinkedList<Integer> emptyCells; // List of empty cells
+    private LinkedList<Integer> emptyCells; // List of empty cells stored in the format: row * 4 + column
 
     public Board(){
         // Constructor
@@ -16,8 +16,6 @@ public class Board {
         randomObject= new Random(); // initialize the random object
 
         matrix = new int[4][4]; // matrix initialized
-        
-        
         
         // add empty cells
         emptyCells = new LinkedList<Integer>();
@@ -27,7 +25,7 @@ public class Board {
             }
         }
 
-        // insert random number at an empty cell;
+        // insert random number (2) at an empty cell;
         insertRandomNumber();
 
         score = 0;
@@ -59,6 +57,7 @@ public class Board {
         // print score
         System.out.print("Score: ");
         System.out.println(score);
+
         System.out.println();
     }
     
@@ -74,6 +73,7 @@ public class Board {
     }
     
     private void insertRandomNumber(){
+        // insert a random new number at a random empty cell
 
         // Select a random place for the random number
         int range=emptyCells.size();
@@ -85,6 +85,7 @@ public class Board {
     
     
     private boolean checkLocations(int step,int oldLocation,int newLocation){
+        // to check conditions for moves
         if(step==-1){
             return oldLocation>=newLocation;
         }
@@ -92,6 +93,8 @@ public class Board {
     }
 
     private void removeEmptyCell(int cell){
+        // remove empty cell from the list
+
         for (int index=0;index<emptyCells.size();index++){
             if(emptyCells.get(index)==cell){
                 emptyCells.remove(index);
@@ -102,6 +105,7 @@ public class Board {
     
     
     private void moveSingleRow(int row, int newLocation, int step ){
+        // perform moves for single rows
         int oldLocation = newLocation+step;
         while(oldLocation< 4 && oldLocation>-1){
             if( matrix[row][oldLocation]==0){
@@ -140,6 +144,8 @@ public class Board {
     }
     
     public void rightMove(){
+        // perform a right move
+
         for(int i=0;i<4;i++){
             // Perform a right move for each row
             moveSingleRow(i,3,-1);
@@ -150,6 +156,8 @@ public class Board {
     }
 
     public void leftMove(){
+        // perform a left move
+
         for(int i=0;i<4;i++){
             // Perform a left move for each row
             moveSingleRow(i,0,1);
@@ -161,6 +169,8 @@ public class Board {
     
 
     private void moveSingleColumn(int column, int newLocation, int step ){
+        // perform column moves
+
         int oldLocation = newLocation+step;
         while(oldLocation< 4 && oldLocation>-1){
             if( matrix[oldLocation][column]==0 ){
@@ -196,6 +206,8 @@ public class Board {
     }
     
     public void upMove(){
+        // To perform an up move
+
         for(int i=0;i<4;i++){
             // Perform a up move for each column
             moveSingleColumn(i,0,1);
@@ -215,6 +227,20 @@ public class Board {
     }
 
     public boolean checkGameFinish(){
-        return emptyCells.size()==0;
+        // to check if the game has ended
+        if(emptyCells.size()>0){
+            // There are some empty cells
+            return false;
+        }
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
+                // check if any pair of adjacent cells are equal
+                if(i>0 && matrix[i][j]==matrix[i-1][j]){return false;}
+                if(i<4 && matrix[i][j]==matrix[i+1][j]){return false;}
+                if(j>0 && matrix[i][j]==matrix[i][j+1]){return false;}
+                if(j<4 && matrix[i][j]==matrix[i][j+1]){return false;}
+            }
+        }
+        return true;
     }    
 };

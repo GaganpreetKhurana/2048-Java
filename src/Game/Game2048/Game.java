@@ -10,6 +10,7 @@ class Game{
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
+        // Print intro message again
         System.out.println("Welcome to 2048!!!!");
         System.out.println("Moves: L(Left) R(Right) U(Up) D(Down)\nPress any other key to end :-(\nPress ENTER key after every move");
 
@@ -17,7 +18,7 @@ class Game{
     
     public static void main(String[] args) {
 
-        clearConsole();
+        // clearConsole();
 
         // new Board Object
         Board newBoard= new Board();
@@ -56,16 +57,23 @@ class Game{
                 newBoard.printBoard();
             }
             catch (InputMismatchException e) {
+                // End game due to invalid input
                 clearConsole();
+
                 System.out.print("Invalid Input!!\nThank You for Playing :-)\n");
                 newBoard.printBoard();
+
                 scan.close();
                 System.exit(0);
             }
         }
+        // The game has finished
+
         clearConsole();
+
         System.out.print("The End!!\nThank You for Playing :-)\n");
         newBoard.printBoard();
+
         scan.close();
         System.exit(0);
 

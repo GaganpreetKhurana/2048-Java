@@ -1,7 +1,9 @@
 # 2048-Java
+
 2048 game - CLI based - Java
 
 ## How to Run
+
 1. Make sure you have **Java** installed in your system
 1. Run the command `javac src\Game\Game2048\Game.java && java src\Game\Game2048\Game` in the command prompt
 
