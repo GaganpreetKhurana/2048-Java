@@ -1,17 +1,22 @@
 package Game2048;
+
 import java.util.Random;
 import java.util.Vector;
 
-public class board {
-    public int matrix[4][4];
-    Random randomObject;
-    board(){
+public class Board {
+
+    private int matrix[4][4]; // Board matrix
+    private Random randomObject;  // To generate a random number
+
+
+    public Board(){
+        // Constructor
         matrix = new int[4][4];
-        maxRandomNumber=2;
         randomObject= new Random();
 
     }
-    void printBoard(){
+    public void printBoard(){
+        // To print the matrix to console
         System.out.println("---- ---- ---- ----");
         for(int i=0;i<4;i++){
             for(int j=0;j<4;j++){
@@ -27,7 +32,8 @@ public class board {
             System.out.println("---- ---- ---- ----");
         }
     }
-    int randomNumber(){
+    private int randomNumber(){
+        // To generate a random number
         if(this.randomObject.nextBoolean()){
             return 2;
         }
@@ -35,43 +41,57 @@ public class board {
             return 4;
         }
     }
-    int randomPosition(Vector<int> postions){
+    private int randomPosition(Vector<int> postions){
+
+        // Select a random place for the random number
         int range=postions.size();
         return postions[this.randomObject.nextInt(range)];
     }
-    void rightMoveRow(int row){
-        int j=3;
+    private void rightMoveRow(int row){
+        int j=3; // new location
         for(int i=2;i>=0;i--){
-            if(j==i){
-                break;
+            if(j<=i){
+                continue;
             }
-            while(matrix[row][j]!=0 && matrix[row][j]!=matrix[row][i]){
+            while(j>i && matrix[row][j]!=0 && matrix[row][j]!=matrix[row][i]){
+                // to find next location
+                // cell should be empty
+                // cell value != current value
                 j--;
             }
-            if(matrix[row][j]==matrix[row][i]){
-                matrix[row][j]*=2;
+            if (j>i) {
+                if (matrix[row][j] == matrix[row][i]) {
+                    // new cell and current cell values are same
+                    matrix[row][j] *= 2;
+                } else {
+                    matrix[row][j] = matrix[row][i];
+                }
+                matrix[row][i] = 0;
             }
-            else{
-                matrix[row][j]=matrix[row][i];
-            }
-            matrix[row][i]=0;
             j--;
+
         }
     }
-    void rightMove(){
+    public void rightMove(){
         for(int i=0;i<4;i++){
+            // Perform a right move for each row
             rightMoveRow(i);
         }
+
+        // generate a new random number
         int randomNumber=randomNumber();
+
+        // positions for random number
         Vector<int> possiblePositions = new Vector<int>();
         for(int i=0;i<4;i++){
-            if(matrix[i][0]==0){
+            if(matrix[i][0]==0){ // empty cells in column 0
                 possiblePositions.append(i);
             }
         }
         if(possiblePositions.size()>0){
+            // insert random number
             int randomPosition= randomPosition(possiblePositions);
             matrix[randomPosition][0]=randomNumber;
         }
     }
-}
+};
