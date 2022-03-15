@@ -124,12 +124,13 @@ public class Board {
                     // new cell and current cell values are same
                     matrix[row][newLocation] *= 2;
                     score+= matrix[row][newLocation];
+                    newLocation+=step;
+
                 } else {
                     matrix[row][newLocation]=matrix[row][oldLocation];
                 }
                 matrix[row][oldLocation] = 0;
                 emptyCells.add(row*4+oldLocation);
-                newLocation+=step;
             }
             else{
                 newLocation=oldLocation;
@@ -181,12 +182,13 @@ public class Board {
                     // new cell and current cell values are same
                     matrix[newLocation][column] *= 2;
                     score+= matrix[newLocation][column];
+                    newLocation+=step;
+
                 } else {
                     matrix[newLocation][column]=matrix[oldLocation][column];
                 }
                 matrix[oldLocation][column] = 0;
                 emptyCells.add(oldLocation * 4 + column);
-                newLocation+=step;
             }else{
                 newLocation=oldLocation;
             }
@@ -216,8 +218,9 @@ public class Board {
 
     private static void clearConsole(){
         // to clear console
-        // System.out.print("\033[H\033[2J");
-        // System.out.flush();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        
         System.out.println("Welcome to 2048!!!!");
         System.out.println("Moves: L(Left) R(Right) U(Up) D(Down)\nPress any other key to end :-(\nPress ENTER key after every move");
 
@@ -239,7 +242,7 @@ public class Board {
 
         while (true) {
             try {
-                
+                System.out.print("Move: ");
                 String input = scan.nextLine();
 
                 // call appropriate function according to input
